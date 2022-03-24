@@ -1,0 +1,29 @@
+name: auto deploy to host
+
+# Controls when the workflow will run
+on:
+  # 這個腳本會在收到push main分支時執行
+  push:
+    branches: [ main ]
+
+  # 允許在action手動執行
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    #執行步驟
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /root/laravel-project/laravel
+          git pull origin main
